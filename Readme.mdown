@@ -1,0 +1,5 @@
+Readme.mdown
+
+https://www.npmjs.org/package/shelljs
+http://fideloper.com/node-github-autodeploy
+https://www.npmjs.org/package/forever
