@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/acolby/nodeWebhook/issues"
   },
-  "homepage": "https://github.com/acolby/nodeWebhook"
+  "homepage": "https://github.com/acolby/nodeWebhook",
+  "dependencies": {
+    "q": "^1.1.2"
+  }
 }

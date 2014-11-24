@@ -1,9 +1,0 @@
-{
-	"github":{
-		"repo": "acolby/platosPlate",
-		"branch": "master",
-		"remote": "origin"
-	},
-	"listingPort": 9001,
-	"appLocation": "../platosPlate"
-}
