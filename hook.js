@@ -20,17 +20,18 @@ doesSystemHaveGit().then(
 			repo: setup.github.repo
 		}).on('all', function(payload) {
 			pullNewCommitFromGithub(payload).then(
+				console.log('received githubb hook...');
 				//success
 				function(sucObj){
-					console.log('success updating repot');
+					console.log('success updating repo');
 				},
 				//error
 				function(errObj){
-					console.log('oops there was an error');
+					console.log('oops, there was an error');
 				}
 			);
 		});
-		console.log('here');
+		console.log('waiting for github hook...');
 	}, 
 	//no
 	function(errObj){
