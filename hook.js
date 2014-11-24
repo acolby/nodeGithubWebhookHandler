@@ -19,8 +19,8 @@ doesSystemHaveGit().then(
 		gith({
 			repo: setup.github.repo
 		}).on('all', function(payload) {
+			console.log('received githubb hook...');
 			pullNewCommitFromGithub(payload).then(
-				console.log('received githubb hook...');
 				//success
 				function(sucObj){
 					console.log('success updating repo');
