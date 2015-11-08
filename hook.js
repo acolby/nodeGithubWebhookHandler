@@ -4,9 +4,13 @@ var express = require('express');
 var app = express();
 var config = require('./.config.json');
 var exec = require('child_process').exec;
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
-	console.log(req);
+	console.log(req.body);
 });
 
 doesSystemHaveGit()
