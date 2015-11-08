@@ -32,10 +32,10 @@ function pullNewCommitFromGithub(payload){
 			].join(' && ');
 			exec(command, function(error, stdout, stderr) {
 				if(stdout.error > 0){
-					console.log('done!!');
+					console.log('fuck!! somthing happend');
 					reject();
 				}else{
-					console.log('fuck!! somthing happend');
+					console.log('done!!');
 					resolve();
 				}
 			});
