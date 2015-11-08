@@ -1,75 +1,51 @@
-// import the setup file
-var setup = {
-	'github': {
-		'repo': 'owner/reponame', // locaion of the repo on github
-		'branch': 'master',
-		'remote': 'origin'
-	},
-	'listingPort': 9001,
-	'appLocation': '../platosPlate'
-};
+'use strict';
 
-var gith = require('gith').create(setup.listingPort);
-var Q = require('q');
+var express = require('express');
+var app = express();
+var config = require('./.config.json');
 var exec = require('child_process').exec;
 
-doesSystemHaveGit().then(
-	//yes
-	function(sucObj){
-		gith({
-			repo: setup.github.repo
-		}).on('all', function(payload) {
-			console.log('received githubb hook...');
-			pullNewCommitFromGithub(payload).then(
-				//success
-				function(sucObj){
-					console.log('success updating repo');
-				},
-				//error
-				function(errObj){
-					console.log('oops, there was an error');
-				}
-			);
-		});
-		console.log('waiting for github hook...');
-	}, 
-	//no
-	function(errObj){
-		console.log('you don\'t have git installed');
-		process.exit(1);
-	}
-);
+app.post('/', function (req, res) {
+	console.log(req);
+});
 
-function doesSystemHaveGit() {
-	var defer = Q.defer();
-	exec('which git', function(error, stdout, stderr) {
-		if( stdout.length > 0){
-			defer.resolve();
+doesSystemHaveGit()
+.then(() => {
+	console.log('waiting for github on port ' + config.port || 9001);
+	var server = app.listen(config.port || 9001);
+}, () => {
+	console.log('you don\'t have git installed');
+	process.exit(1);
+});
+	
+function pullNewCommitFromGithub(payload){
+	return new Promise((resolve, reject) => {
+		if (payload.repository.full_name === config.repository) {
+			var command = [
+				'cd ' + config.path,
+				'git pull',
+			].join(' && ');
+			exec(command, function(error, stdout, stderr) {
+				if(stdout.error > 0){
+					reject();
+				}else{
+					resolve();
+				}
+			});
 		}else{
-			defer.reject();
+			reject();
 		}
 	});
-	return defer.promise;
 }
 
-function pullNewCommitFromGithub(payload){
-	var defer = Q.defer();
-	if (payload.branch === setup.github.branch) {
-		var command = [
-			'cd ' + setup.path,
-			'git fetch ' + setup.github.remote + ' ' + setup.github.branch,
-			'git checkout ' + setup.github.branch,
-			'git reset --hard ' + setup.github.remote + '/' + setup.github.branch
-		].join(' && ');
-		exec(command, function(error, stdout, stderr) {
-			if(stdout.error > 0){
-				defer.reject();
+function doesSystemHaveGit() {
+	return new Promise((resolve, reject) => {
+		exec('which git', function(error, stdout, stderr) {
+			if( stdout.length > 0){
+				resolve();
 			}else{
-				defer.resolve();
+				reject();
 			}
 		});
-	}else{
-		defer.reject();
-	}
-	return defer.promise;
+	});
 }
