@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
-	console.log(req.body);
+	pullNewCommitFromGithub(req.body);
 });
 
 doesSystemHaveGit()
@@ -24,6 +24,7 @@ doesSystemHaveGit()
 	
 function pullNewCommitFromGithub(payload){
 	return new Promise((resolve, reject) => {
+		console.log('pulling from gitub');
 		if (payload.repository.full_name === config.repository) {
 			var command = [
 				'cd ' + config.path,
@@ -31,8 +32,10 @@ function pullNewCommitFromGithub(payload){
 			].join(' && ');
 			exec(command, function(error, stdout, stderr) {
 				if(stdout.error > 0){
+					console.log('done!!');
 					reject();
 				}else{
+					console.log('fuck!! somthing happend');
 					resolve();
 				}
 			});
